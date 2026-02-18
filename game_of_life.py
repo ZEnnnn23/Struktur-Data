@@ -1,221 +1,191 @@
+# Game of Life - Tugas Struktur Data
+# Nama: (isi nama kamu)
+# NIM: (isi nim kamu)
+
 import tkinter as tk
 import random
 
-# Ukuran grid
-UKURAN_SEL = 15
-JUMLAH_KOLOM = 50
-JUMLAH_BARIS = 35
+# Pengaturan
+ukuran_kotak = 20
+banyak_kolom = 40
+banyak_baris = 30
 
-# Warna
-WARNA_HIDUP = "#00ff00"  # hijau
-WARNA_MATI = "#000000"   # hitam
-WARNA_GRID = "#333333"   # abu-abu gelap
+# Grid - pakai list 2D
+grid = []
+for i in range(banyak_baris):
+    baris = []
+    for j in range(banyak_kolom):
+        baris.append(0)  # 0 = mati, 1 = hidup
+    grid.append(baris)
 
-
-# Fungsi buat grid kosong
-def buat_grid_baru():
-    """Buat grid 2D berisi angka 0 semua"""
-    grid = []
-    for i in range(JUMLAH_BARIS):
-        baris = []
-        for j in range(JUMLAH_KOLOM):
-            baris.append(0)
-        grid.append(baris)
-    return grid
+# Variabel
+sedang_jalan = False
+generasi = 0
 
 
 # Fungsi hitung tetangga
-def hitung_tetangga(grid, baris, kolom):
-    """Hitung berapa tetangga yang hidup di sekitar sel ini"""
-    jumlah = 0
+def hitung_tetangga(baris, kolom):
+    total = 0
     
-    # Cek 8 arah: atas, bawah, kiri, kanan, diagonal
+    # Cek 8 kotak di sekitar
     for i in range(-1, 2):
         for j in range(-1, 2):
-            # Jangan hitung sel itu sendiri
             if i == 0 and j == 0:
-                continue
+                continue  # skip kotak sendiri
             
-            # Posisi tetangga
-            baris_tetangga = (baris + i) % JUMLAH_BARIS
-            kolom_tetangga = (kolom + j) % JUMLAH_KOLOM
+            baris_cek = (baris + i) % banyak_baris
+            kolom_cek = (kolom + j) % banyak_kolom
             
-            # Tambah kalau tetangga hidup
-            if grid[baris_tetangga][kolom_tetangga] == 1:
-                jumlah = jumlah + 1
+            if grid[baris_cek][kolom_cek] == 1:
+                total = total + 1
     
-    return jumlah
+    return total
 
 
-# Fungsi update grid ke generasi berikutnya
-def generasi_berikutnya(grid_lama):
-    """Buat generasi baru berdasarkan aturan Game of Life"""
+# Fungsi update grid
+def update_grid():
+    global grid, generasi
+    
     # Buat grid baru
-    grid_baru = buat_grid_baru()
+    grid_baru = []
+    for i in range(banyak_baris):
+        baris = []
+        for j in range(banyak_kolom):
+            baris.append(0)
+        grid_baru.append(baris)
     
-    # Loop semua sel
-    for baris in range(JUMLAH_BARIS):
-        for kolom in range(JUMLAH_KOLOM):
-            # Hitung tetangga
-            tetangga = hitung_tetangga(grid_lama, baris, kolom)
+    # Isi grid baru pakai aturan
+    for i in range(banyak_baris):
+        for j in range(banyak_kolom):
+            tetangga = hitung_tetangga(i, j)
             
-            # Cek aturan
-            if grid_lama[baris][kolom] == 1:  # Kalau sel hidup
+            # Aturan Game of Life
+            if grid[i][j] == 1:  # kalau hidup
                 if tetangga == 2 or tetangga == 3:
-                    grid_baru[baris][kolom] = 1  # Tetap hidup
+                    grid_baru[i][j] = 1
                 else:
-                    grid_baru[baris][kolom] = 0  # Mati
-            else:  # Kalau sel mati
+                    grid_baru[i][j] = 0
+            else:  # kalau mati
                 if tetangga == 3:
-                    grid_baru[baris][kolom] = 1  # Lahir
+                    grid_baru[i][j] = 1
                 else:
-                    grid_baru[baris][kolom] = 0  # Tetap mati
+                    grid_baru[i][j] = 0
     
-    return grid_baru
+    grid = grid_baru
+    generasi = generasi + 1
+    gambar_grid()
+    label_gen.config(text="Generasi: " + str(generasi))
+    
+    if sedang_jalan:
+        window.after(100, update_grid)
 
 
-# Class untuk aplikasi
-class GameOfLife:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Game of Life - Tugas Struktur Data")
-        
-        # Data
-        self.grid = buat_grid_baru()
-        self.jalan = False
-        self.generasi = 0
-        
-        # Buat UI
-        self.buat_tampilan()
-        self.gambar_grid()
+# Fungsi gambar grid
+def gambar_grid():
+    canvas.delete("all")
     
-    def buat_tampilan(self):
-        # Frame atas untuk tombol
-        frame_atas = tk.Frame(self.root)
-        frame_atas.pack(pady=10)
-        
-        # Tombol-tombol
-        self.tombol_start = tk.Button(frame_atas, text="START", 
-                                       command=self.start, width=10)
-        self.tombol_start.pack(side=tk.LEFT, padx=5)
-        
-        tk.Button(frame_atas, text="STOP", 
-                  command=self.stop, width=10).pack(side=tk.LEFT, padx=5)
-        
-        tk.Button(frame_atas, text="RESET", 
-                  command=self.reset, width=10).pack(side=tk.LEFT, padx=5)
-        
-        tk.Button(frame_atas, text="RANDOM", 
-                  command=self.isi_random, width=10).pack(side=tk.LEFT, padx=5)
-        
-        # Label info
-        frame_info = tk.Frame(self.root)
-        frame_info.pack()
-        
-        self.label_gen = tk.Label(frame_info, text="Generasi: 0", 
-                                  font=("Arial", 12))
-        self.label_gen.pack()
-        
-        self.label_info = tk.Label(frame_info, 
-                                   text="Klik kotak untuk hidupin/matikin sel", 
-                                   font=("Arial", 10))
-        self.label_info.pack()
-        
-        # Canvas untuk grid
-        lebar = JUMLAH_KOLOM * UKURAN_SEL
-        tinggi = JUMLAH_BARIS * UKURAN_SEL
-        
-        self.canvas = tk.Canvas(self.root, width=lebar, height=tinggi, 
-                                bg=WARNA_MATI)
-        self.canvas.pack(pady=10)
-        
-        # Event klik
-        self.canvas.bind("<Button-1>", self.klik_canvas)
-    
-    def gambar_grid(self):
-        """Gambar semua sel di canvas"""
-        self.canvas.delete("all")
-        
-        for baris in range(JUMLAH_BARIS):
-            for kolom in range(JUMLAH_KOLOM):
-                x1 = kolom * UKURAN_SEL
-                y1 = baris * UKURAN_SEL
-                x2 = x1 + UKURAN_SEL
-                y2 = y1 + UKURAN_SEL
-                
-                # Pilih warna
-                if self.grid[baris][kolom] == 1:
-                    warna = WARNA_HIDUP
-                else:
-                    warna = WARNA_MATI
-                
-                # Gambar kotak
-                self.canvas.create_rectangle(x1, y1, x2, y2, 
-                                             fill=warna, outline=WARNA_GRID)
-    
-    def klik_canvas(self, event):
-        """Kalau canvas diklik, toggle sel"""
-        kolom = event.x // UKURAN_SEL
-        baris = event.y // UKURAN_SEL
-        
-        # Pastikan dalam batas
-        if 0 <= baris < JUMLAH_BARIS and 0 <= kolom < JUMLAH_KOLOM:
-            # Toggle: 0 jadi 1, 1 jadi 0
-            if self.grid[baris][kolom] == 0:
-                self.grid[baris][kolom] = 1
+    for i in range(banyak_baris):
+        for j in range(banyak_kolom):
+            x1 = j * ukuran_kotak
+            y1 = i * ukuran_kotak
+            x2 = x1 + ukuran_kotak
+            y2 = y1 + ukuran_kotak
+            
+            if grid[i][j] == 1:
+                warna = "green"
             else:
-                self.grid[baris][kolom] = 0
+                warna = "black"
             
-            self.gambar_grid()
-    
-    def update(self):
-        """Update satu generasi"""
-        if self.jalan:
-            self.grid = generasi_berikutnya(self.grid)
-            self.generasi = self.generasi + 1
-            self.label_gen.config(text=f"Generasi: {self.generasi}")
-            self.gambar_grid()
-            
-            # Panggil lagi setelah 100ms
-            self.root.after(100, self.update)
-    
-    def start(self):
-        """Mulai simulasi"""
-        if not self.jalan:
-            self.jalan = True
-            self.update()
-    
-    def stop(self):
-        """Stop simulasi"""
-        self.jalan = False
-    
-    def reset(self):
-        """Reset semua"""
-        self.stop()
-        self.grid = buat_grid_baru()
-        self.generasi = 0
-        self.label_gen.config(text="Generasi: 0")
-        self.gambar_grid()
-    
-    def isi_random(self):
-        """Isi grid dengan sel random"""
-        self.stop()
-        self.generasi = 0
-        
-        for baris in range(JUMLAH_BARIS):
-            for kolom in range(JUMLAH_KOLOM):
-                # 30% chance jadi hidup
-                if random.random() < 0.3:
-                    self.grid[baris][kolom] = 1
-                else:
-                    self.grid[baris][kolom] = 0
-        
-        self.label_gen.config(text="Generasi: 0")
-        self.gambar_grid()
+            canvas.create_rectangle(x1, y1, x2, y2, fill=warna, outline="gray")
 
 
-# Main program
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = GameOfLife(root)
-    root.mainloop()
+# Fungsi tombol start
+def tombol_start():
+    global sedang_jalan
+    sedang_jalan = True
+    update_grid()
+
+
+# Fungsi tombol stop
+def tombol_stop():
+    global sedang_jalan
+    sedang_jalan = False
+
+
+# Fungsi tombol reset
+def tombol_reset():
+    global grid, generasi, sedang_jalan
+    sedang_jalan = False
+    generasi = 0
+    
+    for i in range(banyak_baris):
+        for j in range(banyak_kolom):
+            grid[i][j] = 0
+    
+    gambar_grid()
+    label_gen.config(text="Generasi: 0")
+
+
+# Fungsi tombol random
+def tombol_random():
+    global grid, generasi, sedang_jalan
+    sedang_jalan = False
+    generasi = 0
+    
+    for i in range(banyak_baris):
+        for j in range(banyak_kolom):
+            if random.random() < 0.3:
+                grid[i][j] = 1
+            else:
+                grid[i][j] = 0
+    
+    gambar_grid()
+    label_gen.config(text="Generasi: 0")
+
+
+# Fungsi klik canvas
+def klik(event):
+    kolom = event.x // ukuran_kotak
+    baris = event.y // ukuran_kotak
+    
+    if baris >= 0 and baris < banyak_baris and kolom >= 0 and kolom < banyak_kolom:
+        if grid[baris][kolom] == 0:
+            grid[baris][kolom] = 1
+        else:
+            grid[baris][kolom] = 0
+        gambar_grid()
+
+
+# Buat window
+window = tk.Tk()
+window.title("Game of Life")
+
+# Label
+label_gen = tk.Label(window, text="Generasi: 0", font=("Arial", 14))
+label_gen.pack(pady=5)
+
+# Tombol-tombol
+frame_tombol = tk.Frame(window)
+frame_tombol.pack(pady=5)
+
+tk.Button(frame_tombol, text="START", command=tombol_start, width=10).pack(side=tk.LEFT, padx=5)
+tk.Button(frame_tombol, text="STOP", command=tombol_stop, width=10).pack(side=tk.LEFT, padx=5)
+tk.Button(frame_tombol, text="RESET", command=tombol_reset, width=10).pack(side=tk.LEFT, padx=5)
+tk.Button(frame_tombol, text="RANDOM", command=tombol_random, width=10).pack(side=tk.LEFT, padx=5)
+
+# Canvas
+lebar = banyak_kolom * ukuran_kotak
+tinggi = banyak_baris * ukuran_kotak
+canvas = tk.Canvas(window, width=lebar, height=tinggi, bg="black")
+canvas.pack(pady=5)
+canvas.bind("<Button-1>", klik)
+
+# Label petunjuk
+label_info = tk.Label(window, text="Klik kotak untuk hidupin/matikin sel", font=("Arial", 10))
+label_info.pack(pady=5)
+
+# Gambar pertama kali
+gambar_grid()
+
+# Jalankan
+window.mainloop()

@@ -1,55 +1,27 @@
-GAME OF LIFE - TUGAS STRUKTUR DATA
-===================================
+GAME OF LIFE
+============
 
-CARA MENJALANKAN
-----------------
-1. Pastikan Python sudah terinstall
-2. Buka terminal/command prompt
-3. Ketik: python game_of_life.py
-4. Tekan Enter
+CARA JALANKAN:
+python game_of_life.py
 
 
-CARA PAKAI
-----------
-- Klik kotak untuk hidupin/matikin sel (hijau = hidup, hitam = mati)
-- Tekan START untuk mulai simulasi
-- Tekan STOP untuk berhenti
-- Tekan RESET untuk hapus semua
-- Tekan RANDOM untuk isi acak
+CARA PAKAI:
+- Klik kotak = hidupin/matikin
+- START = mulai
+- STOP = berhenti  
+- RESET = hapus semua
+- RANDOM = isi acak
 
 
-FILE DALAM PROJECT
-------------------
-game_of_life.py   → Program utama
-penjelasan.txt    → Penjelasan lengkap
-README.txt        → File ini
+FILE:
+game_of_life.py  -> program
+penjelasan.txt   -> penjelasan
+README.txt       -> ini
 
 
-YANG PERLU DIINSTALL
---------------------
-Cuma Python! Tkinter sudah built-in, gak perlu install apa-apa lagi.
+KALAU ERROR:
+Pastikan Python sudah terinstall.
+Tkinter biasanya udah ada, gak perlu install.
 
 
-KALAU ADA ERROR
----------------
-Error: "No module named tkinter"
-Solusi: Install tkinter
-  - Windows/Mac: sudah include dalam Python
-  - Linux: sudo apt-get install python3-tk
-
-
-TIPS
-----
-- Coba klik beberapa kotak berdekatan terus START
-- Coba tombol RANDOM untuk lihat pola acak
-- Pola yang menarik: bikin kotak 3x3 di tengah
-
-
-DIBUAT OLEH
------------
-[Nama kamu]
-[NIM kamu]
-[Kelas kamu]
-
-
-Good luck! 🎓
+Dibuat oleh: (nama kamu)

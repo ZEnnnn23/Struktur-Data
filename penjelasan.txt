@@ -1,126 +1,75 @@
 PENJELASAN GAME OF LIFE
 ========================
 
-1. APA ITU GAME OF LIFE?
--------------------------
-Game of Life adalah simulasi yang dibuat oleh John Conway tahun 1970.
-Ini bukan game yang dimainkan, tapi simulasi otomatis.
+APA ITU?
+--------
+Game of Life itu simulasi otomatis. Ada kotak-kotak (grid), 
+setiap kotak bisa hidup (hijau) atau mati (hitam).
 
-Ada grid (seperti papan catur) yang isinya kotak-kotak.
-Setiap kotak = 1 sel.
-Setiap sel bisa hidup (warna hijau) atau mati (warna hitam).
+Tiap kotak punya 8 tetangga (atas, bawah, kiri, kanan, diagonal).
 
 
-2. ATURANNYA APA?
------------------
+ATURANNYA?
+----------
 Ada 4 aturan sederhana:
 
-ATURAN 1: Kalau sel hidup punya kurang dari 2 tetangga hidup
-            → Sel mati (kesepian)
-
-ATURAN 2: Kalau sel hidup punya 2 atau 3 tetangga hidup
-            → Sel tetap hidup
-
-ATURAN 3: Kalau sel hidup punya lebih dari 3 tetangga hidup
-            → Sel mati (terlalu sesak)
-
-ATURAN 4: Kalau sel mati punya tepat 3 tetangga hidup
-            → Sel jadi hidup (lahir)
-
-Tetangga = 8 kotak di sekitar sel (atas, bawah, kiri, kanan, diagonal)
+1. Kotak hidup + tetangga kurang dari 2 = mati
+2. Kotak hidup + tetangga 2 atau 3 = tetap hidup  
+3. Kotak hidup + tetangga lebih dari 3 = mati
+4. Kotak mati + tetangga tepat 3 = jadi hidup
 
 
-3. STRUKTUR DATA YANG DIPAKAI
-------------------------------
-Kita pakai ARRAY 2D (list of lists) untuk simpan grid.
-
-Contoh grid 3x3:
-    grid = [
-        [0, 1, 0],
-        [1, 1, 1],
-        [0, 1, 0]
-    ]
-
-0 = sel mati
-1 = sel hidup
-
-Cara akses: grid[baris][kolom]
-Misalnya grid[0][1] = 1 (baris 0, kolom 1, isinya hidup)
-
-
-4. CARA KERJA ALGORITMA
------------------------
-Setiap generasi:
-
-1. Buat grid baru yang kosong
-2. Loop semua sel di grid lama
-3. Untuk tiap sel:
-   - Hitung ada berapa tetangga hidup
-   - Cek aturan 1-4
-   - Update grid baru
-4. Grid baru jadi grid sekarang
-
-Kenapa harus bikin grid baru?
-Supaya semua sel diupdate BERSAMAAN, bukan satu-satu.
-
-
-5. FUNGSI-FUNGSI PENTING
-------------------------
-
-buat_grid_baru()
-  → Buat grid kosong berisi 0 semua
-
-hitung_tetangga(grid, baris, kolom)
-  → Hitung berapa tetangga hidup di sekitar sel
-  → Loop 8 arah pakai for i in range(-1, 2)
-  → Pakai modulo (%) biar grid melingkar
-
-generasi_berikutnya(grid_lama)
-  → Buat grid baru
-  → Loop semua sel
-  → Terapkan 4 aturan
-  → Return grid baru
-
-
-6. CARA PAKAI PROGRAM
----------------------
+CARA PAKAI PROGRAM?
+-------------------
 1. Jalankan: python game_of_life.py
-2. Klik kotak untuk hidupin/matikin sel
-3. Tekan START untuk mulai simulasi
+2. Klik kotak untuk hidupin/matikin
+3. Tekan START untuk mulai
 4. Tekan STOP untuk berhenti
-5. Tekan RESET untuk bersihkan semua
+5. Tekan RESET untuk hapus semua
 6. Tekan RANDOM untuk isi acak
 
 
-7. KENAPA MENARIK?
-------------------
-Dari 4 aturan sederhana, muncul pola-pola yang keren:
+CARA KERJANYA?
+--------------
+1. Ada variabel "grid" yang isinya list 2D
+   - grid[baris][kolom] = 0 (mati) atau 1 (hidup)
 
-- Ada pola yang diam aja (gak berubah)
-- Ada pola yang berkedip-kedip
-- Ada pola yang bergerak!
-- Ada pola yang terus menghasilkan pola baru
+2. Fungsi hitung_tetangga():
+   - Cek 8 kotak di sekitar
+   - Hitung ada berapa yang hidup
 
-Ini namanya "emergent behavior" - perilaku kompleks dari aturan sederhana.
+3. Fungsi update_grid():
+   - Buat grid baru
+   - Loop semua kotak
+   - Hitung tetangga tiap kotak
+   - Pakai aturan 1-4 untuk isi grid baru
+   - Grid lama jadi grid baru
 
-
-8. FILE-FILE DALAM PROJECT
----------------------------
-game_of_life.py     → Program utama (pakai GUI)
-penjelasan.txt      → File ini
-
-
-9. YANG PERLU DIPAHAMI UNTUK PRESENTASI
-----------------------------------------
-- Apa itu Game of Life
-- 4 aturan Conway
-- Kenapa pakai Array 2D
-- Kenapa perlu grid baru (double buffering)
-- Cara kerja fungsi hitung_tetangga()
+4. Fungsi gambar_grid():
+   - Loop semua kotak
+   - Gambar hijau kalau 1, hitam kalau 0
 
 
-10. REFERENSI
--------------
-- Wikipedia: Game of Life
-- YouTube: cari "Conway's Game of Life"
-- Website: https://playgameoflife.com/
+KENAPA PAKAI LIST 2D?
+---------------------
+Biar gampang akses kotak pakai grid[baris][kolom].
+Kayak Excel, ada baris dan kolom.
+
+
+APA ITU % (MODULO)?
+-------------------
+Biar grid melingkar. Kalau sampai ujung kanan, 
+balik ke kiri lagi.
+
+Contoh:
+(40 + 1) % 40 = 1 % 40 = 1
+(0 - 1) % 40 = -1 % 40 = 39
+
+
+YANG PENTING DIPAHAMI:
+----------------------
+- Grid = list 2D untuk simpan data
+- 0 = mati, 1 = hidup
+- Loop for untuk cek semua kotak
+- Hitung tetangga pakai loop 8 arah
+- Buat grid baru biar update serentak
