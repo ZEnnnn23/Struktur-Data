@@ -1,20 +1,3 @@
-"""
-GAME OF LIFE - Tugas Struktur Data
-Nama: [Isi nama kamu]
-NIM: [Isi NIM kamu]
-
-Apa itu Game of Life?
-- Game otomatis yang dibuat oleh John Conway
-- Ada grid (kotak-kotak) yang isinya sel hidup atau mati
-- Setiap generasi, sel berubah ikutin 4 aturan
-
-4 Aturan:
-1. Sel hidup + tetangga < 2 = mati (kesepian)
-2. Sel hidup + tetangga 2-3 = tetap hidup
-3. Sel hidup + tetangga > 3 = mati (sesak)
-4. Sel mati + tetangga = 3 = jadi hidup (lahir)
-"""
-
 import tkinter as tk
 import random
 
