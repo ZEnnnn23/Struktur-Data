@@ -68,5 +68,5 @@ TIPS:
 - Coba ubah test case untuk eksperimen
 
 
-Dibuat oleh: (nama kamu)
-NIM: (nim kamu)
+Dibuat oleh: Fadhillah Muhammad Nur Hafiz
+NIM: 25091397004
