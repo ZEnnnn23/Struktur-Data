@@ -1,6 +1,6 @@
 # Game of Life - Tugas Struktur Data
-# Nama: (isi nama kamu)
-# NIM: (isi nim kamu)
+# Nama: Fadhillah Muhammad Nur Hafiz
+# NIM: 25091397004
 
 import tkinter as tk
 import random

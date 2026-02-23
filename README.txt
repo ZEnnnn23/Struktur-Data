@@ -24,4 +24,4 @@ Pastikan Python sudah terinstall.
 Tkinter biasanya udah ada, gak perlu install.
 
 
-Dibuat oleh: (nama kamu)
+Dibuat oleh: Fadhillah Muhammad Nur Hafiz
