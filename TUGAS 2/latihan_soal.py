@@ -1,6 +1,6 @@
 # ============================================================
 # LATIHAN SOAL 8 - Python Sets & Dictionaries
-# Nama: Fadhillah Muhammad Nur Hafiz)
+# Nama: Fadhillah Muhammad Nur Hafiz
 # NIM: 25091397004
 # ============================================================
 
