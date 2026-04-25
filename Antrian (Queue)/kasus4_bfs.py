@@ -28,7 +28,7 @@ LEVEL_COLOR = {0:"#E74C3C",1:"#F39C12",2:"#3498DB",3:"#9B59B6"}
 START = "A"
 
 def build_steps():
-    vis,q,order,steps = {},[],deque(),[]
+    vis,q,order,steps = {},deque(),[],[]
     q.append(START); vis[START]=0
     steps.append({"vis":dict(vis),"queue":list(q),"cur":None,"order":list(order),
                   "msg":f"BFS mulai dari '{START}'  ->  enqueue('{START}')","phase":"init"})
